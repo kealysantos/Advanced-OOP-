@@ -38,9 +38,7 @@ How to Run the Project
 2. Open the project in an *IDE* like IntelliJ IDEA or Eclipse.
 3. Compile and run the ContactManager.java file.
 
- Screenshots
-
-
+Screenshots
 Future Improvements
 Improve UI with better layouts.
 Add functionality to import/export contacts.
