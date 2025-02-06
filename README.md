@@ -6,9 +6,9 @@ This is a Java Swing Contact Management System that allows users to add, edit, d
 Features
 Contact List View:
 Displays contacts in a JList.
-Options to add, view details, search, and delete** contacts.
+Options to add, view details, search, and delete contacts.
 
-Contact Details View:Displays contact details: *Name, Phone, Email, Profile Picture*.
+Contact Details View:Displays contact details: Name, Phone, Email, Profile Picture.
 Mark contacts as favorites.
 Call and message simulation.
 Edit contact details.
