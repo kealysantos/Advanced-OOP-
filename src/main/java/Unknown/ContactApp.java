@@ -9,17 +9,14 @@ public class ContactApp {
     private JFrame frame;
     private CardLayout cardLayout;
     private JPanel mainPanel;
-
     private DefaultListModel<String> contactListModel;
     private JList<String> contactList;
     private ArrayList<Contact> contacts;
-
     private JLabel nameLabel, phoneLabel, emailLabel, profilePicture;
     private JTextField nameField, phoneField, emailField, searchField;
     private JComboBox<String> groupSelector;
     private JCheckBox favoriteCheckBox;
     private String selectedProfileImage = null;
-
     public ContactApp() {
         frame = new JFrame("Contact");
         frame.setSize(500, 600);
@@ -40,7 +37,6 @@ public class ContactApp {
         frame.add(mainPanel);
         frame.setVisible(true);
     }
-
     public void initContactListView() {
         JPanel panel = new JPanel(new BorderLayout());
         contactListModel = new DefaultListModel<>();
@@ -73,7 +69,6 @@ public class ContactApp {
 
         mainPanel.add(panel, "LIST");
     }
-
     public void initContactDetailsView() {
         JPanel panel = new JPanel(new GridLayout(6, 1));
         nameLabel = new JLabel();
@@ -107,9 +102,11 @@ public class ContactApp {
 
         mainPanel.add(panel, "DETAILS");
     }
-
     public void initContactCreationView() {
-        JPanel panel = createInputPanel(200, 150);
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         nameField = new JTextField(10);
         phoneField = new JTextField(10);
@@ -121,36 +118,40 @@ public class ContactApp {
         JButton cancelButton = new JButton("Cancel");
 
         Dimension buttonSize = new Dimension(80, 25);
-        selectImageButton.setPreferredSize(buttonSize);
-        saveButton.setPreferredSize(buttonSize);
-        cancelButton.setPreferredSize(buttonSize);
+        JButton[] buttons = {selectImageButton, saveButton, cancelButton};
+        for (JButton button : buttons) {
+            button.setPreferredSize(buttonSize);
+        }
 
         selectImageButton.addActionListener(e -> chooseProfileImage());
         saveButton.addActionListener(e -> saveContact());
         cancelButton.addActionListener(e -> cardLayout.show(mainPanel, "LIST"));
 
-        panel.add(new JLabel("Name:"));
-        panel.add(nameField);
-        panel.add(new JLabel("Phone:"));
-        panel.add(phoneField);
-        panel.add(new JLabel("Email:"));
-        panel.add(emailField);
-        panel.add(selectImageButton);
-        panel.add(saveButton);
-        panel.add(cancelButton);
+        JLabel[] labels = {new JLabel("Name:"), new JLabel("Phone:"), new JLabel("Email:"), new JLabel("Group:")};
+        Component[] fields = {nameField, phoneField, emailField, groupSelector};
+
+        for (int i = 0; i < labels.length; i++) {
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            panel.add(labels[i], gbc);
+
+            gbc.gridx = 1;
+            panel.add(fields[i], gbc);
+        }
+
+        for (int i = 0; i < buttons.length; i++) {
+            gbc.gridx = i;
+            gbc.gridy = labels.length;
+            panel.add(buttons[i], gbc);
+        }
 
         mainPanel.add(panel, "CREATE");
     }
-
     public JPanel createInputPanel(int width, int height) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5)); // Compact layout
         panel.setPreferredSize(new Dimension(width, height));
         return panel;
     }
-
-
-
-
     public void showContactDetails() {
         int index = contactList.getSelectedIndex();
         if (index == -1) {
@@ -211,7 +212,6 @@ public class ContactApp {
 
         cardLayout.show(mainPanel, "CREATE");
     }
-
     public void deleteContact() {
         int index = contactList.getSelectedIndex();
         if (index != -1) {
@@ -219,7 +219,6 @@ public class ContactApp {
             contactListModel.remove(index);
         }
     }
-
     public void searchContacts() {
         String query = searchField.getText().toLowerCase();
         DefaultListModel<String> filteredModel = new DefaultListModel<>();
@@ -229,6 +228,11 @@ public class ContactApp {
         }
 
         contactList.setModel(filteredModel);
+    }
+
+    public void clearSearch() {
+        searchField.setText("");
+        contactList.setModel(contactListModel);
     }
 
     public void chooseProfileImage() {
@@ -244,7 +248,6 @@ public class ContactApp {
             profilePicture.setText("");
         }
     }
-
     public class Contact {
         String name, phone, email, group, imagePath;
         boolean isFavorite;
